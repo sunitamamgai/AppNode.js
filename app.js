@@ -7,19 +7,24 @@ const server = http.createServer((req,res)=>{
     if (url ==='/'){
         res.write('<html>');
         res.write('<head><title>Enter message</title></head>');
-        res.write('<body><form action="/message method="POST"><input type="text" name="message"><button type="submit">Send</button></form></body>');
+        res.write('<body><form action="/message" method="POST"><input type="text" name="message"><button type="submit">Send</button></form></body>');
         res.write('</html>');
         return res.end();
     }
     //redirecting request
-    if (url ==='/message'&& method === 'POST'){
+    if (url ==='/message' && method === 'POST'){
         fs.writeFileSync('message.txt','Dummy');
         res.statusCode = 302;
-        res.setHeader('Location','/');
+        res.setHeader("Content-Type", "text/html"); // Mistake line
+        res.write("<html>");
+        res.write("<head><title>Message page</title></head>");
+        res.write("<body><h1>Redirected to message</h1></body>");
+        res.write("</html>");
         return res.end();
+      }
 
     }
-    res.setHeader('Content-Type','text/html');
+    
     res.write('<html>');
     res.write('<head><title>First message</title></head>');
     res.write('<body><h1>Hello from node.js server</h1></body>');
