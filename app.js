@@ -1,5 +1,6 @@
 const http = require('http');
 const fs = require('fs');
+const { brotliDecompressSync } = require('zlib');
 
 const server = http.createServer((req,res)=>{
     const url = req.url;
@@ -13,6 +14,18 @@ const server = http.createServer((req,res)=>{
     }
     //redirecting request
     if (url ==='/message' && method === 'POST'){
+        //parsing request 
+        const body =[];
+        req.on('data',(chunk)=>{
+            console.log(chunk);
+            body.push(chunk);
+
+        });
+        //second argument
+        req.on('end',()=>{
+         const parsedBody =Buffer.concat(body).toString();
+         console.log(parsedBody);         
+        });
         fs.writeFileSync('message.txt','Dummy');
         res.statusCode = 302;
         res.setHeader("Content-Type", "text/html"); // Mistake line
@@ -22,8 +35,9 @@ const server = http.createServer((req,res)=>{
         res.write("</html>");
         return res.end();
       }
+    
 
-    }
+    
     
     res.write('<html>');
     res.write('<head><title>First message</title></head>');
