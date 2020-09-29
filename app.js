@@ -24,9 +24,10 @@ const server = http.createServer((req,res)=>{
         //second argument
         req.on('end',()=>{
          const parsedBody =Buffer.concat(body).toString();
-         console.log(parsedBody);         
+         const message = parsedBody.split('=')[1];
+         fs.writeFileSync('message.txt',message);         
         });
-        fs.writeFileSync('message.txt','Dummy');
+        
         res.statusCode = 302;
         res.setHeader("Content-Type", "text/html"); // Mistake line
         res.write("<html>");
@@ -37,8 +38,7 @@ const server = http.createServer((req,res)=>{
       }
     
 
-    
-    
+
     res.write('<html>');
     res.write('<head><title>First message</title></head>');
     res.write('<body><h1>Hello from node.js server</h1></body>');
